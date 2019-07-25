@@ -7,6 +7,6 @@
         "moduleResolution": "Node",
         "esModuleInterop": true
     },
-    "include": ["src/**/*"],
+    "include": ["src/js/**/*", "src/js/node_modules/**/*"],
     "exclude": ["**/*.test.ts"]
 }

@@ -1,4 +1,7 @@
-import Renderer from './Renderer';
+import Renderer from 'Renderer';
+import BuffersManager from 'data/BuffersManager';
+import { dataLoader_v1, bitDataLoader_v1 } from 'data/loader';
+import MapData from 'data/MapData';
 
 /******************************/
 
@@ -83,7 +86,7 @@ function initResize(
         'resize',
         () => {
             setBodySize();
-            this.setTimeout(setBodySize, 10);
+            setTimeout(setBodySize, 10);
         },
         false
     );
@@ -95,31 +98,13 @@ function initResize(
 window.addEventListener('load', async function(){
     console.log('script start');
 
-    let size = 1024,
-        dataBuffer = new Uint16Array(size * size * 3),
-        colorBuffer = new Uint8Array(size * 4);
-
-    for (var i = 0; i < size * size * 3; i+= 3) {
-        dataBuffer[ i + 0 ] = 0;
-        dataBuffer[ i + 1 ] = Math.floor(Math.random() * 255);
-        dataBuffer[ i + 2 ] = Math.floor(Math.random() * 255) % 4;
-    }
-
-    for (var i = 0; i < size * 4; i+= 4) {
-        colorBuffer[ i + 0 ] = Math.floor(Math.random() * 255);
-        colorBuffer[ i + 1 ] = Math.floor(Math.random() * 255);
-        colorBuffer[ i + 2 ] = Math.floor(Math.random() * 255);
-        colorBuffer[ i + 3 ] = Math.floor(Math.random() * 255);
-    }
-    colorBuffer[0] = 0;
-    colorBuffer[1] = 64;
-    colorBuffer[2] = 0;
-
     let canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    let buffersManager = new BuffersManager();
+    let mapData = new MapData();
     let renderer = new Renderer(
             canvas,
-            dataBuffer,
-            colorBuffer
+            buffersManager.getDataBuffer(),
+            buffersManager.getColorBuffer()
         );
 
     await renderer.init();
@@ -127,6 +112,28 @@ window.addEventListener('load', async function(){
     initMouseEvents(canvas, renderer);
     initResize(canvas, renderer);
 
+    await bitDataLoader_v1(
+        'data/mapv2-rc1.bin',
+        buffersManager
+    );
+    renderer.updateData();
+    renderer.requestUpdate();
+
+    await dataLoader_v1(
+        'data/data.json',
+        mapData,
+        buffersManager
+    );
+    renderer.updateData();
+    renderer.requestUpdate();
+
+    // this.window.addEventListener('click', () => {
+    //     buffersManager.setColor(3, `#${ Math.random().toString(16).replace('0.', '') }000000`);
+    //     renderer.updateColors();
+    // }, false);
+
     console.log('script end');
-    window['test'] = renderer;
+    window['test'] = {
+        renderer, buffersManager, mapData
+    };
 }, false);

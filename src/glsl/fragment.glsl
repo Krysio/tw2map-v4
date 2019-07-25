@@ -4,7 +4,13 @@ precision mediump float;
 
 in vec2 corner;
 in vec2 pixelPosition;
+in vec2 halfResolution;
+
 in float smoothWeight;
+
+in vec2 radius;
+in vec2 halfRadius;
+in vec2 normalizedRadius;
 
 out vec4 outColor;
 
@@ -22,77 +28,54 @@ float randSeed;
 //  vec3 round(vec3 x)  { return floor(x + 0.5); }
 //  vec4 round(vec4 x)  { return floor(x + 0.5); }
 
-float rand(vec2 co){
-    randSeed++;
-    return fract(sin(dot(co.xy + iTime + randSeed, vec2(12.9898,78.233))) * 43758.5453);
-}
-
-float hexDist(vec2 p) {
+float hexDistanceToCenter(vec2 p) {
     p = abs(p);
-    float d = dot(p, normalize(vec2(1.0, 1.7)));
-	return max(p.x, d);
+    float d = dot(p, normalizedRadius);
+	return max(p.x, d) * 2.0;
 }
 
 vec4 hexCoords(vec2 uv) {
-    vec2 r = vec2(1.0, 1.7);
-    vec2 h = 0.5 * r;
-    vec2 a = mod(uv, r) - h;
-    vec2 b = mod(uv - h, r) - h;
+    vec2 a = mod(uv, radius) - halfRadius;
+    vec2 b = mod(uv - halfRadius, radius) - halfRadius;
     vec2 gv = length(a) < length(b) ? a : b;
 
     return vec4(
-        (uv.x - gv.x) * 2.0, // x
-        (uv.y - gv.y) / 1.7 * 2.0, // y
-        hexDist(gv) * 2.0, // distance to center {0.0 - 1.0}, 1.0 = border
+        floor(uv.x - gv.x) , // x
+        (uv.y - gv.y) / radius.y * 2.0, // y
+        hexDistanceToCenter(gv), // distance to center {0.0 - 1.0}, 1.0 = border
         0.0//atan(gv.x, gv.y) // radian
     );
 }
 
-
-
 void main() {
     randSeed = 1.0;
 
-    // vec2 hexSize = vec2(10.0);
-    // vec2 hexSizeHalf = hexSize * 0.5;
-
-    // float hexPosYMod;
-    // float hexPosXMod;
-    // float step = 0.0;
-    // vec2 hexCoord;
-
-    // hexPosYMod = mod(corner.y, hexSize.y);
-    // if (mod(corner.y, hexSize.y * 2.0) > hexSize.y) {
-    //     step = hexSize.x / 2.0;
-    // }
-    // hexPosXMod = mod(corner.x + step, hexSize.x);
-
-    // hexCoord.x = corner.x - hexPosXMod;
-    // hexCoord.y = corner.y - hexPosYMod;
-
-    vec2 halfResolution = iResolution * 0.5;
     vec2 pxPosCentered = vec2(pixelPosition - halfResolution);
     vec2 scalar = vec2(1.0) * iSize;
 
-    vec4 hexCoord = hexCoords(vec2(
-        pxPosCentered.x + 1000.0 * 0.5 * 1.0 * iPosition.x * iSize,
-        pxPosCentered.y + 1000.0 * 0.5 * 1.7 * iPosition.y * iSize
-    ) / scalar);
+    vec4 hexCoord = hexCoords(
+        vec2(
+            pxPosCentered.x + 1000.0 * iPosition.x * iSize,
+            pxPosCentered.y + 1000.0 * 0.5 * radius.y * iPosition.y * iSize
+        ) / scalar
+    );
+    vec2 roundedHexCoord = round(hexCoord.xy);
 
     // dane pola
     mediump uvec4 data;
 
     // poza obszarem mapy
-    if (hexCoord.x < 0.0
-        || hexCoord.x >= 1000.0
-        || hexCoord.y < 0.0
-        || hexCoord.y >= 1000.0
+
+    if (roundedHexCoord.x < 0.0
+        || roundedHexCoord.x >= 1000.0
+        || roundedHexCoord.y < 0.0
+        || roundedHexCoord.y >= 1000.0
     ) {
         data = uvec4(0u, 0u, 0u, 0u);
     } else {
         data = texture(
             iData,
-            hexCoord.xy / 1024.0
+            roundedHexCoord.xy / 1024.0
         );
     }
 
@@ -108,7 +91,6 @@ void main() {
     );
 
     if (data.z == 0u // puste pole
-
     ) {
         outColor = bgColor;
     } else {
