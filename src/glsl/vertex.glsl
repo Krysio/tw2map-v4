@@ -1,18 +1,16 @@
-#version 300 es
+precision highp float;
 
-precision mediump float;
+attribute vec4 vertexIndex;
 
-in vec4 vertexIndex;
+varying vec2 corner;
+varying vec2 pixelPosition;
+varying vec2 halfResolution;
 
-out vec2 corner;
-out vec2 pixelPosition;
-out vec2 halfResolution;
+varying float smoothWeight;
 
-out float smoothWeight;
-
-out vec2 radius;
-out vec2 halfRadius;
-out vec2 normalizedRadius;
+varying vec2 radius;
+varying vec2 halfRadius;
+varying vec2 normalizedRadius;
 
 uniform vec2 iResolution;
 uniform float iSize;

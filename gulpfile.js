@@ -2,9 +2,11 @@
 
 const path = require('path');
 const gulp = require('gulp');
-const gulpUtil = require('gulp-util');
+const sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
 const browserSync = require('browser-sync');
 const webpack = require('webpack');
+const chalk = require('chalk');
 
 /******************************/
 
@@ -26,6 +28,16 @@ const DIR_BUILD = '.';
 function taskGl() {
     return gulp.src('src/glsl/*.glsl')
         .pipe(gulp.dest('static/common/glsl'));
+}
+
+// SASS
+
+function taskSass() {
+    return gulp.src('src/sass/*.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass.sync().on('error', sass.logError))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('static/'+ ENV +'/css'));
 }
 
 // JS
@@ -58,16 +70,16 @@ let compiler = webpack({
     },
     module: {
         rules: [
-            // { // Reakt
-            //     test: /\.jsx$/,
-            //     exclude: excludeNoSec,
-            //     use: {
-            //         loader: 'babel-loader',
-            //         options: {
-            //             presets: [/*'@babel/preset-env', */'@babel/preset-react']
-            //         }
-            //     }
-            // },
+            { // Reakt
+                test: /\.jsx$/,
+                exclude: excludeNoSec,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [/*'@babel/preset-env', */'@babel/preset-react']
+                    }
+                }
+            },
             { // TypeScript + React
                 test: /\.(ts|tsx)$/,
                 exclude: excludeNoSec,
@@ -87,18 +99,18 @@ let compiler = webpack({
 function taskJs(done) {
     compiler.run((error, stats) => {
         if (error) {
-            let pluginError = new gulpUtil.PluginError('webpack', error);
-
-            gulpUtil.log('[webpack]', pluginError);
+            console.log(chalk.yellow('[webpack][main]'));
+            console.error(error.message);
         }
 
         if (stats.compilation.errors.length) {
             let list = stats.compilation.errors;
 
             for (let i = 0, l = list.length; i < l; i++) {
-                let pluginError = new gulpUtil.PluginError('webpack', list[ i ]);
+                let error = list[ i ];
 
-                gulpUtil.log('[webpack][compilation]', pluginError);
+                console.log(chalk.yellow('[webpack][compilation]'));
+                console.error(error.message);
             }
         }
 
@@ -120,6 +132,7 @@ function taskHtml() {
 function taskWatch(done) {
     gulp.watch('src/glsl/*', taskGl);
     gulp.watch('src/html/*', taskHtml);
+    gulp.watch('src/sass/**/*', taskSass);
     gulp.watch('src/js/**/*', taskJs);
     done();
 }
@@ -127,8 +140,7 @@ function taskWatch(done) {
 // default
 
 let mainTask = gulp.series(
-    // gulp.parallel(taskSass, taskHtml, taskCopyAssets)
-    gulp.parallel(taskHtml, taskJs, taskGl)
+    gulp.parallel(taskSass, taskHtml, taskJs, taskGl)
 );
 
 // develop
@@ -152,6 +164,7 @@ let developTask = gulp.series(
 
         gulp.watch(`static/${ ENV }/*`).on('change', bs.reload);
         gulp.watch(`static/${ ENV }/js/*`).on('change', bs.reload);
+        gulp.watch(`static/${ ENV }/css/*`).on('change', bs.reload);
         gulp.watch(`static/common/glsl/*`).on('change', bs.reload);
         gulp.watch(`static/common/js/*`).on('change', bs.reload);
     }
@@ -160,6 +173,7 @@ let developTask = gulp.series(
 Object.assign(exports, {
     default: mainTask,
     html: taskHtml,
+    sass: taskSass,
     js: taskJs,
     watch: taskWatch,
     develop: developTask

@@ -1,0 +1,157 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "helpers";
+
+/** REPLACE BOOTSTRAP VARIBLES * START */
+
+// Color system
+
+$white:    #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:    #000 !default;
+
+// stylelint-disable value-keyword-case
+
+$font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:            $font-family-sans-serif !default;
+
+$primary: #000000aa;
+
+$bgPrimary: #000000;
+$bgSecondary: #111111;
+
+$yiq-text-dark: $gray-900;
+$yiq-text-light: $white;
+
+$body-bg: $bgPrimary;
+$body-color: $white;
+
+$input-btn-padding-y: em(6, 16);
+$input-btn-padding-x: em(10, 16);
+$input-btn-font-family: $font-family-monospace;
+$input-btn-font-size: em(10, 16);
+$input-btn-line-height: 1.2;
+$custom-select-indicator-padding: 1em;
+
+/** REPLACE BOOTSTRAP VARIBLES * END */
+
+@import "../../node_modules/bootstrap/scss/variables";
+@import "import";
+
+/** CUSTOM MIXINS * START */
+
+@mixin bgCarbon {
+    background-color: rgb(32, 32, 32);
+    background-image: linear-gradient(
+        45deg,
+        $bgPrimary 24%,
+        transparent 26%,
+        transparent 74%,
+        $bgPrimary 76%,
+        $bgPrimary
+    ), linear-gradient(
+        45deg,
+        $bgPrimary 24%,
+        transparent 26%,
+        transparent 74%,
+        $bgPrimary 76%,
+        $bgPrimary
+    ), linear-gradient(
+        to bottom,
+        $bgSecondary,
+        $gray-900
+    );
+    background-size: rem(8) rem(8), rem(8) rem(8), rem(8) rem(4);
+    background-position: 0px 0px, rem(4) rem(4), 0px 0px;
+}
+
+@mixin absolute-stretch {
+    position: absolute;
+    top: 0; left: 0;
+    bottom: 0; right: 0;
+}
+
+.ifx-ac {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/** CUSTOM MIXINS * END */
+/** REPLACE BOOTSTRAP * START */
+
+.btn {
+    box-shadow: 0 0 0 em(3) $gray-900;
+    &:hover {
+        box-shadow: 0 0 0 em(3) $gray-700;
+    }
+}
+
+/** REPLACE BOOTSTRAP * END */
+/** CUSTOM STYLES * START */
+
+body {
+    font-family: $font-family-monospace;
+    background: $bgPrimary;
+}
+
+#root {
+    @include absolute-stretch;
+}
+
+.layout-map {
+    @include absolute-stretch;
+    @include bgCarbon;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    .top-bar {
+        position: relative;
+        padding: rem(6) rem(10);
+        border-bottom: solid rem(2) $bgPrimary;
+        display: flex;
+        justify-content: space-between;
+
+        .left {
+            flex-basis: 1;
+        }
+        .right {
+            display: block;
+        }
+    }
+    .canvas {
+        padding: rem(5);
+        display: flex;
+        align-items: stretch;
+        flex-grow: 1;
+
+        & > div {
+            position: relative;
+            flex-grow: 1;
+            overflow: hidden;
+            border-radius: rem(6);
+            box-shadow: 0 0 rem(2) rem(2) $bgPrimary;
+
+            &:after {
+                content: ' ';
+                @include absolute-stretch;
+                display: block;
+                border-radius: rem(6);
+                box-shadow: 0 0 rem(10) 0 $bgPrimary inset;
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+/** CUSTOM STYLES * END */

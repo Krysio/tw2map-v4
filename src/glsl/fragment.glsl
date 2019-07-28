@@ -1,32 +1,28 @@
-#version 300 es
+precision highp float;
 
-precision mediump float;
+varying vec2 corner;
+varying vec2 pixelPosition;
+varying vec2 halfResolution;
 
-in vec2 corner;
-in vec2 pixelPosition;
-in vec2 halfResolution;
+varying float smoothWeight;
 
-in float smoothWeight;
-
-in vec2 radius;
-in vec2 halfRadius;
-in vec2 normalizedRadius;
-
-out vec4 outColor;
+varying vec2 radius;
+varying vec2 halfRadius;
+varying vec2 normalizedRadius;
 
 uniform float iTime;
 uniform float iSize;
 uniform vec2 iPosition;
 uniform vec2 iResolution;
-uniform mediump usampler2D iData;
-uniform lowp usampler2D iColor;
+uniform mediump sampler2D iData;
+uniform lowp sampler2D iColor;
 
 float randSeed;
 
-// float round(float x) { return floor(x + 0.5); }
-//  vec2 round(vec2 x)  { return floor(x + 0.5); }
-//  vec3 round(vec3 x)  { return floor(x + 0.5); }
-//  vec4 round(vec4 x)  { return floor(x + 0.5); }
+float round(float x) { return floor(x + 0.5); }
+ vec2 round(vec2 x)  { return floor(x + 0.5); }
+ vec3 round(vec3 x)  { return floor(x + 0.5); }
+ vec4 round(vec4 x)  { return floor(x + 0.5); }
 
 float hexDistanceToCenter(vec2 p) {
     p = abs(p);
@@ -40,7 +36,7 @@ vec4 hexCoords(vec2 uv) {
     vec2 gv = length(a) < length(b) ? a : b;
 
     return vec4(
-        floor(uv.x - gv.x) , // x
+        floor(uv.x - gv.x), // x
         (uv.y - gv.y) / radius.y * 2.0, // y
         hexDistanceToCenter(gv), // distance to center {0.0 - 1.0}, 1.0 = border
         0.0//atan(gv.x, gv.y) // radian
@@ -62,7 +58,7 @@ void main() {
     vec2 roundedHexCoord = round(hexCoord.xy);
 
     // dane pola
-    mediump uvec4 data;
+    mediump vec4 data;
 
     // poza obszarem mapy
 
@@ -71,49 +67,65 @@ void main() {
         || roundedHexCoord.y < 0.0
         || roundedHexCoord.y >= 1000.0
     ) {
-        data = uvec4(0u, 0u, 0u, 0u);
+        data = vec4(0, 0, 0, 0);
     } else {
-        data = texture(
+        data = texture2D(
             iData,
             roundedHexCoord.xy / 1024.0
         );
     }
 
-    lowp uvec4 rawBgColor = texture(
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    // if (roundedHexCoord.x == 500.0
+    //     && roundedHexCoord.y == 500.0
+    // ) {
+    //     vec4 test = texture2D(iData, vec2(500.0, 500.0));
+    //     gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    //     if (test.x > 0.0) {
+    //         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    //     }
+    //     if (test.x < 0.0) {
+    //         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    //     }
+    //     if (test.x == 0.0) {
+    //         gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+    //     }
+    // }
+    // if (data.z == 0.0) {
+    //     gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+    // } else if (data.z == (1.0 / 255.0)) {
+    //     gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+    // } else if (data.z == (2.0 / 255.0)) {
+    //     gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    // }
+
+    //*/
+
+    vec4 bgColor = texture2D(
         iColor,
-        vec2(float(data.x) / 1024.0, 0.0)
+        vec2(data.x, 0.0)
     );
-    vec4 bgColor = vec4(
-        float(rawBgColor.x) / 255.0,
-        float(rawBgColor.y) / 255.0,
-        float(rawBgColor.z) / 255.0,
+
+    gl_FragColor = vec4(
+        bgColor.rgb,
         1.0
     );
 
-    if (data.z == 0u // puste pole
-    ) {
-        outColor = bgColor;
-    } else {
-        lowp uvec4 rawColor = texture(
+    if (data.z != 0.0) {
+        vec4 color = texture2D(
             iColor,
-            vec2(float(data.y) / 1024.0, 0.0)
-        );
-        vec4 color = vec4(
-            float(rawColor.x) / 255.0,
-            float(rawColor.y) / 255.0,
-            float(rawColor.z) / 255.0,
-            1.0
+            vec2(data.y, 0.0)
         );
 
         float pSmoth;
         float nSmoth;
 
-        if (data.z == 1u) { // village
+        if (data.z == 1.0 / 255.0) { // village
             pSmoth = smoothstep(0.7, 0.7 + smoothWeight, hexCoord.z);
-        } else if (data.z == 2u) { // province border
-            pSmoth = smoothstep(0.2, 0.2 + smoothWeight, hexCoord.z);
-        } else if (data.z == 3u) { // continent border
+        } else if (data.z == 2.0 / 255.0) { // province border
             pSmoth = smoothstep(0.3, 0.3 + smoothWeight, hexCoord.z);
+        } else if (data.z == 3.0 / 255.0) { // continent border
+            pSmoth = smoothstep(0.2, 0.2 + smoothWeight, hexCoord.z);
         }
 
         nSmoth = 1.0 - pSmoth;
@@ -123,12 +135,10 @@ void main() {
             1.0
         );
 
-        // if (hexCoord.z < 0.99) {
-        //     color = vec4(0.0, 0.0, 0.0, 1.0);
-        // }
-
-        outColor = color;
+        gl_FragColor = color;
     }
+
+    //*/
 
     // if (round(hexCoord.x) == 500.0) {
     //     color = vec4(1.0, 0.0, 1.0, 1.0);
