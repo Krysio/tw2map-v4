@@ -37,7 +37,7 @@ vec4 hexCoords(vec2 uv) {
 
     return vec4(
         floor(uv.x - gv.x), // x
-        (uv.y - gv.y) / radius.y * 2.0, // y
+        round((uv.y - gv.y) / radius.y * 2.0), // y
         hexDistanceToCenter(gv), // distance to center {0.0 - 1.0}, 1.0 = border
         0.0//atan(gv.x, gv.y) // radian
     );
@@ -55,55 +55,32 @@ void main() {
             pxPosCentered.y + 1000.0 * 0.5 * radius.y * iPosition.y * iSize
         ) / scalar
     );
-    vec2 roundedHexCoord = round(hexCoord.xy);
 
     // dane pola
-    mediump vec4 data;
+    mediump vec4 dataA;
+    mediump vec4 dataB;
 
     // poza obszarem mapy
 
-    if (roundedHexCoord.x < 0.0
-        || roundedHexCoord.x >= 1000.0
-        || roundedHexCoord.y < 0.0
-        || roundedHexCoord.y >= 1000.0
+    if (hexCoord.x < 0.0
+        || hexCoord.x >= 1000.0
+        || hexCoord.y < 0.0
+        || hexCoord.y >= 1000.0
     ) {
-        data = vec4(0, 0, 0, 0);
+        dataA = vec4(0, 0, 0, 0);
     } else {
-        data = texture2D(
+        dataA = texture2D(
             iData,
-            roundedHexCoord.xy / 1024.0
+            vec2(
+                hexCoord.x * 2.0 / 2048.0,
+                hexCoord.y / 1024.0
+            )
         );
     }
 
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    // if (roundedHexCoord.x == 500.0
-    //     && roundedHexCoord.y == 500.0
-    // ) {
-    //     vec4 test = texture2D(iData, vec2(500.0, 500.0));
-    //     gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-    //     if (test.x > 0.0) {
-    //         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-    //     }
-    //     if (test.x < 0.0) {
-    //         gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-    //     }
-    //     if (test.x == 0.0) {
-    //         gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-    //     }
-    // }
-    // if (data.z == 0.0) {
-    //     gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-    // } else if (data.z == (1.0 / 255.0)) {
-    //     gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
-    // } else if (data.z == (2.0 / 255.0)) {
-    //     gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-    // }
-
-    //*/
-
     vec4 bgColor = texture2D(
         iColor,
-        vec2(data.x, 0.0)
+        vec2(dataA.x, dataA.y)
     );
 
     gl_FragColor = vec4(
@@ -111,20 +88,29 @@ void main() {
         1.0
     );
 
-    if (data.z != 0.0) {
+    if (dataA.z != 0.0) {
+
+        dataB = texture2D(
+            iData,
+            vec2(
+                (hexCoord.x * 2.0 + 1.0) / 2048.0,
+                hexCoord.y / 1024.0
+            )
+        );
+
         vec4 color = texture2D(
             iColor,
-            vec2(data.y, 0.0)
+            vec2(dataB.x, dataB.y)
         );
 
         float pSmoth;
         float nSmoth;
 
-        if (data.z == 1.0 / 255.0) { // village
+        if (dataA.z == 1.0 / 255.0) { // village
             pSmoth = smoothstep(0.7, 0.7 + smoothWeight, hexCoord.z);
-        } else if (data.z == 2.0 / 255.0) { // province border
+        } else if (dataA.z == 2.0 / 255.0) { // province border
             pSmoth = smoothstep(0.3, 0.3 + smoothWeight, hexCoord.z);
-        } else if (data.z == 3.0 / 255.0) { // continent border
+        } else if (dataA.z == 3.0 / 255.0) { // continent border
             pSmoth = smoothstep(0.2, 0.2 + smoothWeight, hexCoord.z);
         }
 

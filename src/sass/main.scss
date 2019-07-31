@@ -41,6 +41,10 @@ $input-btn-font-size: em(10, 16);
 $input-btn-line-height: 1.2;
 $custom-select-indicator-padding: 1em;
 
+// modal
+
+$modal-content-bg: $bgPrimary;
+
 /** REPLACE BOOTSTRAP VARIBLES * END */
 
 @import "../../node_modules/bootstrap/scss/variables";
@@ -84,8 +88,68 @@ $custom-select-indicator-padding: 1em;
     flex-wrap: wrap;
     align-items: center;
 }
+.ifx-as {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
 
 /** CUSTOM MIXINS * END */
+/** REPLACE MODAL * START */
+
+.modal-container {
+    @include absolute-stretch;
+    overflow: hidden;
+
+    & > .modal {
+        position: absolute;
+        width: 0px;
+        height: 0px;
+        overflow: visible;
+
+        &.show {
+            display: block;
+        }
+        & > .modal-dialog {
+            position: absolute;
+            margin: 0;
+            max-width: none;
+        }
+        .modal-content {
+            position: relative;
+            width: auto;
+        }
+        .modal-body {
+            max-height: 600px;
+            overflow: auto;
+
+            .dropdown-menu {
+                margin: 0;
+                padding: 0;
+                border: none;
+            }
+        }
+        .close {
+            color: $white;
+            text-shadow: none;
+        }
+
+        &.mode-1, &.mode-3 {
+            .modal-dialog {right: 0}
+        }
+        &.mode-2, &.mode-3 {
+            .modal-dialog {bottom: 0}
+        }
+    }
+    .modal-header {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+/** CUSTOM MODAL * END */
 /** REPLACE BOOTSTRAP * START */
 
 .btn {
@@ -100,7 +164,7 @@ $custom-select-indicator-padding: 1em;
 
 body {
     font-family: $font-family-monospace;
-    background: $bgPrimary;
+    background-color: $bgPrimary;
 }
 
 #root {
@@ -118,7 +182,8 @@ body {
     .top-bar {
         position: relative;
         padding: rem(6) rem(10);
-        border-bottom: solid rem(2) $bgPrimary;
+        border-bottom: solid rem(3) rgba($bgPrimary, 0.75);
+        box-shadow: 0 0 rem(15) 0 $bgPrimary inset;
         display: flex;
         justify-content: space-between;
 
@@ -140,7 +205,11 @@ body {
             flex-grow: 1;
             overflow: hidden;
             border-radius: rem(6);
-            box-shadow: 0 0 rem(2) rem(2) $bgPrimary;
+            box-shadow: 0 0 rem(1) rem(2) $bgPrimary, 0 0 rem(3) 0 $bgPrimary;
+
+            & > canvas {
+                @include absolute-stretch;
+            }
 
             &:after {
                 content: ' ';
