@@ -63,7 +63,7 @@ function excludeNoSec(testPath) {
 
 let compiler = webpack({
     mode: ENV,
-    devtool: ENV === 'production' ? null : 'eval-source-map',
+    devtool: ENV === 'production' ? false : 'eval-source-map',
     entry: './src/js/main.ts',
     output: {
         path: path.resolve(__dirname, DIR_BUILD, 'static/'+ ENV +'/js'),
