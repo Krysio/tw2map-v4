@@ -18,7 +18,6 @@ if (VALID_ENV_LIST.indexOf(ENV) === -1) {
 /******************************/
 
 const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const app = express();
 
@@ -36,11 +35,14 @@ let httpServer = http.createServer();
 httpServer.on('request', app);
 httpServer.listen(httpPort, emptyFunction);
 
-app.use(express.static(path.join('/', '/static/common')));
-app.use(express.static(path.join('/', `/static/${ ENV }`)));
+let staticPath = path.join(__dirname, './static');
+
+app.use('/', express.static(path.join(staticPath, 'common')));
+app.use('/', express.static(path.join(staticPath, ENV)));
+
 // Default request
 app.use((req, res) => {
     res.sendFile(`index.html`, {root: `./static/${ ENV }`});
 });
 
-console.log(`Running ${ENV} server at port ${port}`);
+console.log(`Running ${ ENV } server at port ${ httpPort }`);
