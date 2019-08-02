@@ -101,37 +101,117 @@ $modal-content-bg: $bgPrimary;
     @include absolute-stretch;
     overflow: hidden;
 
-    & > .modal {
+    .modal-slot {
+        position: absolute;
+        top: 0; left: 0;
+        width: 0;
+        height: 0;
+
+        & > .modal {
+            opacity: 0.8;
+        }
+        &.active > .modal {
+            opacity: 1;
+        }
+    }
+
+    .modal {
         position: absolute;
         width: 0px;
         height: 0px;
         overflow: visible;
+        transition: opacity 0.2s ease;
 
         &.show {
             display: block;
         }
-        & > .modal-dialog {
+
+        .modal-dialog {
             position: absolute;
             margin: 0;
             max-width: none;
         }
+
         .modal-content {
             position: relative;
             width: auto;
+            border: none;
+            background: none;
         }
+
+        .modal-header,
+        .modal-body,
+        .modal-footer {
+            $border: solid em(3) $black;
+
+            padding: em(5) em(10);
+            border: $border;
+            border-top: none;
+            border-radius: none;
+            background-color: rgba($bgPrimary, 0.95);
+
+            &:first-child {
+                border-top: $border;
+            }
+        }
+
+        .modal-header {
+            box-shadow: 0 0 em(15) 0 rgba($white, 0.1) inset;
+            @include bgCarbon;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: grab;
+        }
+
         .modal-body {
             max-height: 600px;
             overflow: auto;
-
-            .dropdown-menu {
-                margin: 0;
-                padding: 0;
-                border: none;
-            }
+            box-shadow: 0 0 0 em(1) $bgSecondary inset;
         }
+
+        .modal-footer {
+            box-shadow: 0 0 0 em(1) $bgSecondary inset;
+        }
+
         .close {
+            margin: #{-(em(5))} #{-(em(10))} #{-(em(5))} 0;
+            padding: 0 em(10);
             color: $white;
             text-shadow: none;
+            display: flex;
+            align-self: stretch;
+            align-items: center;
+            float: none;
+
+            & > span {
+                position: relative;
+                width: em(10);
+                height: em(10);
+                display: block;
+                transition: all 0.3s ease;
+
+                &:after,
+                &:before {
+                    $width: em(2);
+
+                    content: ' ';
+                    position: absolute;
+                    top: 0; bottom: 0;
+                    left: 50%;
+                    margin-left: -($width / 2);
+                    width: $width;
+                    background-color: #fff;
+                    display: block;
+                }
+                &:before {transform: rotate(-45deg);}
+                &:after {transform: rotate(45deg);}
+            }
+
+            &:hover > span {
+                transform: rotate(180deg);
+            }
         }
 
         &.mode-1, &.mode-3 {
@@ -140,12 +220,6 @@ $modal-content-bg: $bgPrimary;
         &.mode-2, &.mode-3 {
             .modal-dialog {bottom: 0}
         }
-    }
-    .modal-header {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
     }
 }
 
