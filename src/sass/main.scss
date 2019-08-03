@@ -1,7 +1,18 @@
 @import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/rc-color-picker/assets/index";
 @import "helpers";
 
 /** REPLACE BOOTSTRAP VARIBLES * START */
+
+$spacer: 1rem;
+$spacers: (
+    0: 0,
+    1: ($spacer * 0.15),
+    2: ($spacer * 0.25),
+    3: ($spacer * 0.5),
+    4: ($spacer * 0.75),
+    5: ($spacer * 1)
+);
 
 // Color system
 
@@ -80,7 +91,7 @@ $modal-content-bg: $bgPrimary;
 @mixin absolute-stretch {
     position: absolute;
     top: 0; left: 0;
-    bottom: 0; right: 0;
+    width: 100%; height: 100%;
 }
 
 .ifx-ac {
@@ -209,7 +220,10 @@ $modal-content-bg: $bgPrimary;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        cursor: grab;
+
+        &:not(:active) {
+            cursor: grab;
+        }
     }
 
     .modal-body {
@@ -298,3 +312,16 @@ body {
 }
 
 /** CUSTOM STYLES * END */
+
+// Color picker restyle
+
+.rc-color-picker-panel {
+    background-color: transparent;
+}
+.rc-color-picker-panel-inner {
+    box-shadow: none;
+    border: none;
+}
+.rc-color-picker-panel-params-lable-number:hover {
+    color: $black;
+}
