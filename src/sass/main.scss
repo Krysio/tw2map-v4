@@ -5,6 +5,7 @@
 
 /** REPLACE BOOTSTRAP VARIBLES * START */
 
+$baseSize: 10;
 $spacer: 1rem;
 $spacers: (
     0: 0,
@@ -46,10 +47,10 @@ $yiq-text-light: $white;
 $body-bg: $bgPrimary;
 $body-color: $white;
 
-$input-btn-padding-y: em(6, 16);
-$input-btn-padding-x: em(10, 16);
+$input-btn-padding-y: em(4, $baseSize);
+$input-btn-padding-x: em(8, $baseSize);
 $input-btn-font-family: $font-family-monospace;
-$input-btn-font-size: em(10, 16);
+$input-btn-font-size: em(10, $baseSize);
 $input-btn-line-height: 1.2;
 $custom-select-indicator-padding: 1em;
 
@@ -109,6 +110,11 @@ $modal-content-bg: $bgPrimary;
     flex-wrap: wrap;
     align-items: stretch;
 }
+.fx-ac {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
 
 /** CUSTOM MIXINS * END */
 /** REPLACE MODAL * START */
@@ -154,14 +160,14 @@ $modal-content-bg: $bgPrimary;
 
             & > span {
                 position: relative;
-                width: em(10);
-                height: em(10);
+                width: em(5, $baseSize);
+                height: em(5, $baseSize);
                 display: block;
                 transition: all 0.3s ease;
 
                 &:after,
                 &:before {
-                    $width: em(2);
+                    $width: em(1, $baseSize);
 
                     content: ' ';
                     position: absolute;
@@ -205,9 +211,9 @@ $modal-content-bg: $bgPrimary;
     .modal-header,
     .modal-body,
     .modal-footer {
-        $border: solid em(3) $black;
+        $border: solid em(3, $baseSize) $black;
 
-        padding: em(5) em(10);
+        padding: em(5, $baseSize) em(10, $baseSize);
         border: $border;
         border-top: none;
         border-radius: none;
@@ -219,7 +225,7 @@ $modal-content-bg: $bgPrimary;
     }
 
     .modal-header {
-        box-shadow: 0 0 em(15) 0 rgba($white, 0.1) inset;
+        box-shadow: 0 0 em(15, $baseSize) 0 rgba($white, 0.1) inset;
         @include bgCarbon;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -234,11 +240,11 @@ $modal-content-bg: $bgPrimary;
     .modal-body {
         max-height: 600px;
         overflow: auto;
-        box-shadow: 0 0 0 em(1) $bgSecondary inset;
+        box-shadow: 0 0 0 em(1, $baseSize) $bgSecondary inset;
     }
 
     .modal-footer {
-        box-shadow: 0 0 0 em(1) $bgSecondary inset;
+        box-shadow: 0 0 0 em(1, $baseSize) $bgSecondary inset;
     }
 }
 
@@ -246,9 +252,9 @@ $modal-content-bg: $bgPrimary;
 /** REPLACE BOOTSTRAP * START */
 
 .btn {
-    box-shadow: 0 0 0 em(3) $gray-900;
+    box-shadow: 0 0 0 em(2, $baseSize) $gray-900;
     &:hover {
-        box-shadow: 0 0 0 em(3) $gray-700;
+        box-shadow: 0 0 0 em(2, $baseSize) $gray-700;
     }
 }
 
@@ -257,6 +263,7 @@ $modal-content-bg: $bgPrimary;
 
 body {
     font-family: $font-family-monospace;
+    font-size: rem($baseSize);
     background-color: $bgPrimary;
 }
 
