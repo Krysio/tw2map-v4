@@ -5,7 +5,7 @@
 
 /** REPLACE BOOTSTRAP VARIBLES * START */
 
-$baseSize: 10;
+$baseSize: 12;
 $spacer: 1rem;
 $spacers: (
     0: 0,
@@ -57,6 +57,11 @@ $custom-select-indicator-padding: 1em;
 // modal
 
 $modal-content-bg: $bgPrimary;
+
+// table
+
+$table-cell-padding:          em(6, $baseSize);
+$table-cell-padding-sm:       em(3, $baseSize);
 
 /** REPLACE BOOTSTRAP VARIBLES * END */
 
@@ -336,4 +341,18 @@ body {
 }
 .rc-color-picker-panel-params-lable-number:hover {
     color: $black;
+}
+
+// tooltip
+
+.toolTipModal {
+    pointer-events: none;
+    user-select: none;
+
+    table.table-sm td {
+        $xPadding: em(10, $baseSize);
+
+        padding-left: $xPadding;
+        padding-right: $xPadding;
+    }
 }

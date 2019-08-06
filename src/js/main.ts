@@ -14,6 +14,8 @@ const appMainMapCanvas: HTMLCanvasElement = document.createElement('canvas');
 const appMainMap: Api = initMap(appMainMapCanvas);
 const appStores: StoreMap = createStores();
 
+appMainMap.loadMapData('data/data.json');
+
 // bind stores & mainMap
 (function(stores, mainMap){
     let globalStore = stores.global,
