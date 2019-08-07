@@ -242,12 +242,7 @@ $table-cell-padding-sm:       em(3, $baseSize);
         }
     }
 
-    .modal-body {
-        max-height: 600px;
-        overflow: auto;
-        box-shadow: 0 0 0 em(1, $baseSize) $bgSecondary inset;
-    }
-
+    .modal-body,
     .modal-footer {
         box-shadow: 0 0 0 em(1, $baseSize) $bgSecondary inset;
     }
@@ -265,6 +260,33 @@ $table-cell-padding-sm:       em(3, $baseSize);
 
 /** REPLACE BOOTSTRAP * END */
 /** CUSTOM STYLES * START */
+
+// scroll
+
+/* width */
+::-webkit-scrollbar {
+    padding-left: 0.2em;
+    width: 0.5em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0.5em $gray-900;
+    border-radius: 0.5em;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $gray-900;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $gray-800;
+}
+
+// body
 
 body {
     font-family: $font-family-monospace;
@@ -345,7 +367,7 @@ body {
 
 // tooltip
 
-.toolTipModal {
+.tooltipModal {
     pointer-events: none;
     user-select: none;
 
@@ -385,4 +407,16 @@ body {
     .value-2 {color: #96eba4;}
     .value-3 {color: #e5eb96;}
     .value-4 {color: #eb9696;}
+}
+
+// searchModal
+
+.searchModal {
+    min-width: 20vw;
+
+    .result-list {
+        max-height: 60vh;
+        padding-right: em(3, $baseSize);
+        overflow-y: scroll;
+    }
 }
