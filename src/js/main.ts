@@ -14,10 +14,32 @@ const appMainMapCanvas: HTMLCanvasElement = document.createElement('canvas');
 const appMainMap: Api = initMap(appMainMapCanvas);
 const appStores: StoreMap = createStores();
 
-appMainMap.loadMapData('data/data.json');
+(async function(){
+    await appMainMap.initPromise;
+
+    /******************************/
+
+    // async
+    (async function(){
+        let bacgroundBitData = await (
+            await fetch('data/mapv2-rc1.bin')
+        ).arrayBuffer();
+
+        appMainMap.events.emit('data/bg', bacgroundBitData);
+    })();
+    (async function(){
+        let jsonData = await (
+            await fetch('data/data.json')
+        ).json();
+
+        appMainMap.events.emit('data/load', jsonData);
+    })();
+})();
+
+/******************************/
 
 // bind stores & mainMap
-(function(stores, mainMap){
+(function(stores, mainMapEvents){
     let globalStore = stores.global,
         previosGlobalState = globalStore.getState();
 
@@ -38,36 +60,37 @@ appMainMap.loadMapData('data/data.json');
         if (flagChanged) {
             // update colors map
             for (let key in map_key2color) {
-                let newValue = newGlobalState[ `map_${ key }` ];
+                let color = newGlobalState[ `map_${ key }` ];
 
-                mainMap.buffersManager.setColor(
-                    map_key2color[ key ].index,
-                    newValue
-                );
+                mainMapEvents.emit('map/color', {
+                    index: map_key2color[ key ].index,
+                    color: color
+                });
             }
-            mainMap.renderer.updateColors(
-                mainMap.buffersManager.getColorBuffer()
-            );
         }
 
         previosGlobalState = newGlobalState;
     });
-})(appStores, appMainMap);
-
-// view
-const modalSystem: ModalManager = new ModalManager();
-const appView: React.ReactElement = React.createElement(
-    App,
-    {
-        stores: appStores,
-        mainMap: appMainMap,
-        modalSystem: modalSystem
-    }
-);
+})(appStores, appMainMap.events);
 
 /******************************/
 
-ReactDom.render(
-    appView,
-    window.document.getElementById('root')
-);
+(function(){
+    // view
+    const modalSystem: ModalManager = new ModalManager();
+    const appView: React.ReactElement = React.createElement(
+        App,
+        {
+            stores: appStores,
+            mainMap: appMainMap,
+            modalSystem: modalSystem
+        }
+    );
+
+    /******************************/
+
+    ReactDom.render(
+        appView,
+        window.document.getElementById('root')
+    );
+})();
