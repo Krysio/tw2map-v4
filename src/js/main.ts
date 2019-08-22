@@ -2,16 +2,16 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import App from 'view/App';
 import createStores, { StoreMap } from 'stores';
-import initMap, { Api } from 'core';
+import initMap, { MapApi } from 'map';
 import ModalManager from 'libs/ModalManager';
 
-import { map_key2color } from 'data/mapColors';
+import { map_key2color } from 'map/data/mapColors';
 
 /******************************/
 
 // main modules
 const appMainMapCanvas: HTMLCanvasElement = document.createElement('canvas');
-const appMainMap: Api = initMap(appMainMapCanvas);
+const appMainMap: MapApi = initMap(appMainMapCanvas);
 const appStores: StoreMap = createStores();
 
 (async function(){
