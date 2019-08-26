@@ -1,21 +1,36 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import App from 'view/App';
+import debug from 'debug';
+
+import initData from 'data';
+import initCanvas, { CanvasApi } from 'canvas';
 import createStores, { StoreMap } from 'stores';
-import initMap, { MapApi } from 'map';
+
+import App from 'view/App';
 import ModalManager from 'libs/ModalManager';
 
-import { map_key2color } from 'map/data/mapColors';
+import { map_key2color } from 'canvas/data/mapColors';
 
 /******************************/
 
+if (process.env.NODE_ENV === 'development') {
+    debug.enable('app,app:*');
+}
+
+/******************************/
+
+const debugLog = debug('app');
+
 // main modules
-const appMainMapCanvas: HTMLCanvasElement = document.createElement('canvas');
-const appMainMap: MapApi = initMap(appMainMapCanvas);
+const appData = initData();
+const appMainCanvasElemetn: HTMLCanvasElement = document.createElement('canvas');
+const appMainCanvas: CanvasApi = initCanvas(appMainCanvasElemetn, appData);
 const appStores: StoreMap = createStores();
 
 (async function(){
-    await appMainMap.initPromise;
+    await appMainCanvas.initPromise;
+
+    debugLog('async');
 
     /******************************/
 
@@ -25,14 +40,16 @@ const appStores: StoreMap = createStores();
             await fetch('data/mapv2-rc1.bin')
         ).arrayBuffer();
 
-        appMainMap.events.emit('data/bg', bacgroundBitData);
+        debugLog('async bg');
+        appData.commands.loadBackgroundData(bacgroundBitData);
     })();
     (async function(){
         let jsonData = await (
             await fetch('data/data.json')
         ).json();
 
-        appMainMap.events.emit('data/load', jsonData);
+        debugLog('async data');
+        appData.commands.loadBaseBata(jsonData);
     })();
 })();
 
@@ -62,16 +79,16 @@ const appStores: StoreMap = createStores();
             for (let key in map_key2color) {
                 let color = newGlobalState[ `map_${ key }` ];
 
-                mainMapEvents.emit('map/color', {
-                    index: map_key2color[ key ].index,
-                    color: color
-                });
+                appMainCanvas.commands.setColorInSlot(
+                    map_key2color[ key ].index,
+                    color
+                );
             }
         }
 
         previosGlobalState = newGlobalState;
     });
-})(appStores, appMainMap.events);
+})(appStores, appMainCanvas.events);
 
 /******************************/
 
@@ -82,7 +99,8 @@ const appStores: StoreMap = createStores();
         App,
         {
             stores: appStores,
-            mainMap: appMainMap,
+            mainCanvas: appMainCanvas,
+            appData: appData,
             modalSystem: modalSystem
         }
     );

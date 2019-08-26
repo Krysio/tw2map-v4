@@ -1,3 +1,5 @@
+//@ts-check
+
 // Gulp
 
 const path = require('path');
@@ -6,6 +8,10 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const browserSync = require('browser-sync');
 const webpack = require('webpack');
+/**
+ * @type { import('chalk').default }
+ */
+//@ts-ignore
 const chalk = require('chalk');
 
 /******************************/
@@ -62,7 +68,7 @@ function excludeNoSec(testPath) {
 }
 
 let compiler = webpack({
-    mode: ENV,
+    mode: ENV === 'production' ? 'production' : 'development',
     devtool: ENV === 'production' ? false : 'eval-source-map',
     entry: './src/js/main.ts',
     output: {
@@ -77,7 +83,8 @@ let compiler = webpack({
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [/*'@babel/preset-env', */'@babel/preset-react']
+                        presets: [/*'@babel/preset-env', */'@babel/preset-react'],
+                        allowTsInNodeModules: true
                     }
                 }
             },
@@ -86,7 +93,10 @@ let compiler = webpack({
                 exclude: excludeNoSec,
                 use: [
                     {
-                        loader: 'ts-loader'
+                        loader: 'ts-loader',
+                        options: {
+                            allowTsInNodeModules: true
+                        }
                     }
                 ]
             }
@@ -100,7 +110,9 @@ let compiler = webpack({
 function taskJs(done) {
     compiler.run((error, stats) => {
         if (error) {
-            console.log(chalk.yellow('[webpack][main]'));
+            console.log(
+                chalk.yellow('[webpack][main]')
+            );
             console.error(error.message);
         }
 
