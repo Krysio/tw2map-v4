@@ -93,6 +93,8 @@ const appStores: StoreMap = createStores();
 /******************************/
 
 (function(){
+    window.document.getElementById('loader').remove();
+
     // view
     const modalSystem: ModalManager = new ModalManager();
     const appView: React.ReactElement = React.createElement(

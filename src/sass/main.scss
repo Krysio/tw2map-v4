@@ -47,8 +47,11 @@ $yiq-text-light: $white;
 $body-bg: $bgPrimary;
 $body-color: $white;
 
-$input-btn-padding-y: em(4, $baseSize);
-$input-btn-padding-x: em(8, $baseSize);
+$base-padding-x: em(8, $baseSize);
+$base-padding-y: em(4, $baseSize);
+
+$input-btn-padding-x: $base-padding-x;
+$input-btn-padding-y: $base-padding-y;
 $input-btn-font-family: $font-family-monospace;
 $input-btn-font-size: em(10, $baseSize);
 $input-btn-line-height: 1.2;
@@ -60,8 +63,26 @@ $modal-content-bg: $bgPrimary;
 
 // table
 
-$table-cell-padding:          em(6, $baseSize);
-$table-cell-padding-sm:       em(3, $baseSize);
+$table-cell-padding: em(6, $baseSize);
+$table-cell-padding-sm: em(3, $baseSize);
+
+// Dropdowns
+
+$dropdown-min-width: em(6, $baseSize);
+$dropdown-padding-y: 0;
+$dropdown-font-size: 1em;
+$dropdown-color: $gray-100;
+$dropdown-bg: transparent;
+$dropdown-border-color: $bgSecondary;
+$dropdown-border-radius: 0;
+$dropdown-border-width: em(1, $baseSize);
+$dropdown-spacer: 0;
+$dropdown-item-padding-x: $base-padding-x;
+$dropdown-item-padding-y: $base-padding-y;
+$dropdown-link-color: $gray-400;
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $bgSecondary;
+$dropdown-header-color: $gray-400;
 
 /** REPLACE BOOTSTRAP VARIBLES * END */
 
@@ -259,6 +280,10 @@ $table-cell-padding-sm:       em(3, $baseSize);
     }
 }
 
+.dropdown-header {
+    padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+}
+
 /** REPLACE BOOTSTRAP * END */
 /** CUSTOM STYLES * START */
 
@@ -288,6 +313,10 @@ $table-cell-padding-sm:       em(3, $baseSize);
 }
 
 // body
+
+html, body {
+    height: 100%;
+}
 
 body {
     font-family: $font-family-monospace;
