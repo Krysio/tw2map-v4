@@ -5,7 +5,6 @@
 
 /** REPLACE BOOTSTRAP VARIBLES * START */
 
-$baseSize: 12;
 $spacer: 1rem;
 $spacers: (
     0: 0,
@@ -29,6 +28,12 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 $black:    #000 !default;
+
+// [custom]
+
+$baseSize: 12;
+$box-shadow-1: 0 0 0 em(2, $baseSize) $gray-900;
+$box-shadow-2: 0 0 0 em(2, $baseSize) $gray-700;
 
 // stylelint-disable value-keyword-case
 
@@ -57,6 +62,14 @@ $input-btn-font-size: em(10, $baseSize);
 $input-btn-line-height: 1.2;
 $custom-select-indicator-padding: 1em;
 
+// input
+
+$input-bg: $bgSecondary;
+$input-disabled-bg: $gray-800;
+
+$input-color: $gray-100;
+$input-border-color: $primary;
+
 // modal
 
 $modal-content-bg: $bgPrimary;
@@ -66,7 +79,7 @@ $modal-content-bg: $bgPrimary;
 $table-cell-padding: em(6, $baseSize);
 $table-cell-padding-sm: em(3, $baseSize);
 
-// Dropdowns
+// dropdowns
 
 $dropdown-min-width: em(6, $baseSize);
 $dropdown-padding-y: 0;
@@ -273,10 +286,11 @@ $dropdown-header-color: $gray-400;
 /** CUSTOM MODAL * END */
 /** REPLACE BOOTSTRAP * START */
 
-.btn {
-    box-shadow: 0 0 0 em(2, $baseSize) $gray-900;
+.btn,
+.form-control {
+    box-shadow: $box-shadow-1;
     &:hover {
-        box-shadow: 0 0 0 em(2, $baseSize) $gray-700;
+        box-shadow: $box-shadow-2;
     }
 }
 

@@ -60,24 +60,15 @@ const appStores: StoreMap = createStores();
     let globalStore = stores.global,
         previosGlobalState = globalStore.getState();
 
+    // set colors to canvas on change
+
     let unsubscriber = globalStore.subscribe(() => {
-        let newGlobalState = globalStore.getState(),
-            flagChanged: boolean;
+        let newGlobalState = globalStore.getState();
 
-        flagChanged = false;
-        for (let key in map_key2color) {
-            let newValue = newGlobalState[ `map_${ key }` ],
-                oldValue = previosGlobalState[ `map_${ key }` ];
-
-            if (newValue !== oldValue) {
-                flagChanged = true;
-            }
-        }
-
-        if (flagChanged) {
+        if (newGlobalState['map'] !== previosGlobalState['map']) {
             // update colors map
             for (let key in map_key2color) {
-                let color = newGlobalState[ `map_${ key }` ];
+                let color = newGlobalState['map'][ key ];
 
                 appMainCanvas.commands.setColorInSlot(
                     map_key2color[ key ].index,
@@ -88,7 +79,45 @@ const appStores: StoreMap = createStores();
 
         previosGlobalState = newGlobalState;
     });
+
+    // change store after change canvas view
+
+    let saveViewTimeoutId = null,
+        viewState = {
+            x: 0,
+            y: 0,
+            size: 0
+        },
+        saveView = () => {
+            // TODO
+            console.log('save world store', viewState);
+        },
+        requestSaveView = () => {
+            if (saveViewTimeoutId !== null) {
+                clearTimeout(saveViewTimeoutId);
+            }
+
+            saveViewTimeoutId = setTimeout(saveView, 3e3);
+        };
+
+    mainMapEvents.on('changed position/tile', (position) => {
+        viewState.x = position.x;
+        viewState.y = position.y;
+        requestSaveView();
+    });
+    mainMapEvents.on('changed canvas/size/tile', (value) => {
+        viewState.size = value;
+        requestSaveView();
+    });
 })(appStores, appMainCanvas.events);
+// bind stores with localStorage
+(function(stores){
+    let unsubscriber = stores.global.subscribe(() => {
+        window.localStorage.setItem('global', JSON.stringify(stores.global.getState()));
+    });
+
+    stores.global.actions.importDb();
+})(appStores);
 
 /******************************/
 
