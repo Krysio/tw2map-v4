@@ -8,9 +8,7 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const browserSync = require('browser-sync');
 const webpack = require('webpack');
-/**
- * @type { import('chalk').default }
- */
+const historyFallback = require('connect-history-api-fallback');
 //@ts-ignore
 const chalk = require('chalk');
 
@@ -167,7 +165,10 @@ let developTask = gulp.series(
         bs.init({
             server: {
                 baseDir: `./static/${ ENV }`,
-                index: 'index.html'
+                index: 'index.html',
+                middleware: [
+                  historyFallback()
+                ]
             },
             serveStatic: [
                 `./static/${ ENV }`,
