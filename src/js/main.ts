@@ -51,3 +51,8 @@ import ModalManager from 'libs/ModalManager';
         window.document.getElementById('root')
     );
 })();
+
+if (process.env.NODE_ENV === 'development') {
+    window['dev'] = window['dev'] || {};
+    window['dev'].context = context;
+}

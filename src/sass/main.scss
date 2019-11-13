@@ -36,8 +36,8 @@ $black:    #000 !default;
 // [custom]
 
 $baseSize: 12;
-$box-shadow-1: 0 0 0 em(2, $baseSize) $gray-900;
-$box-shadow-2: 0 0 0 em(2, $baseSize) $gray-700;
+$box-shadow-1: 0 0 0 em(1, $baseSize) $gray-900;
+$box-shadow-2: 0 0 0 em(1, $baseSize) $gray-700;
 
 // stylelint-disable value-keyword-case
 
@@ -112,6 +112,17 @@ $jumbotron-bg: $bgSecondary;
 /** REPLACE BOOTSTRAP VARIBLES * END */
 
 @import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+
+// Button sizes
+@mixin button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+    padding: $padding-y * 1.1 $padding-x $padding-y * 0.9 $padding-x;
+    @include font-size($font-size);
+    line-height: $line-height;
+    // Manually declare to provide an override to the browser default
+    @include border-radius($border-radius, 0);
+}
+
 @import "import";
 
 /** CUSTOM MIXINS * START */
@@ -268,7 +279,7 @@ $jumbotron-bg: $bgSecondary;
         padding: em(5, $baseSize) em(10, $baseSize);
         border: $border;
         border-top: none;
-        border-radius: none;
+        border-radius: 0;
         background-color: rgba($bgPrimary, 0.95);
 
         &:first-child {
@@ -287,6 +298,11 @@ $jumbotron-bg: $bgSecondary;
         &:not(:active) {
             cursor: grab;
         }
+    }
+
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: scroll;
     }
 
     .modal-body,
@@ -472,9 +488,7 @@ body {
     min-width: 20vw;
 
     .result-list {
-        max-height: 60vh;
         padding-right: em(3, $baseSize);
-        overflow-y: scroll;
     }
 }
 
@@ -487,4 +501,62 @@ img.img-flag {
     border-radius: em(2, $baseSize);
     background-color: rgba(0,0,0,0.5);
     display: inline-block;
+}
+
+// marker
+
+.markersModal {
+    .modal-content {
+        min-width: 30em;
+    }
+}
+
+.marker {
+    margin: 0.2em 0;
+    padding: 0.2em;
+    border-radius: 0.3em;
+    border: solid 1px rgba($gray-900, 0.5);
+    background-color: rgba($bgSecondary, 0.3);
+
+    opacity: 0.5;
+    &.active {
+        opacity: 1;
+    }
+
+    .marker-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .marker-body {
+        padding: 0.2em;
+        border-radius: 0.3em;
+        border: solid 1px rgba($gray-900, 0.3);
+        background-color: rgba($bgPrimary, 0.3);
+    }
+}
+
+.marker-item {
+    margin: 0.2em 0;
+    padding: 0.4em;
+    border-radius: 0.3em;
+    border: solid 1px rgba($gray-900, 0.5);
+    background-color: rgba($bgSecondary, 0.3);
+    display: flex;
+    justify-content: space-between;
+
+    opacity: 0.5;
+    &.active {
+        opacity: 1;
+    }
+
+    & > div {
+        margin: -0.2em;
+
+        & > * {
+            margin: 0.2em;
+        }
+    }
 }
