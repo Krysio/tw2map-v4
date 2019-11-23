@@ -21,12 +21,14 @@ import bindMainCanvasWorldStore from 'bind/mainCanvas-worldStore';
 import bindLocalStorageGlobalStore from 'bind/localStorage-globalStore';
 import bindMainCanvasStateStore from 'bind/mainCanvas-stateStore';
 import bindLocalStorageWorldStore from 'bind/localStorage-worldStore';
+import bindMainCanvasWorldStoreMarkers from 'bind/mainCanvas-worldStoreMarkers';
 
 bindMainCanvasGlobalStore(context);
 bindMainCanvasWorldStore(context);
 bindLocalStorageGlobalStore(context);
 bindMainCanvasStateStore(context);
 bindLocalStorageWorldStore(context);
+bindMainCanvasWorldStoreMarkers(context);
 
 /******************************/
 

@@ -206,6 +206,15 @@ $jumbotron-bg: $bgSecondary;
         overflow: visible;
         transition: opacity 0.2s ease;
 
+        // DEBUG
+        // &:after {
+        //     content: ' ';
+        //     width: 0;
+        //     left: 0;
+        //     outline: solid 2px rgba(red, 1);
+        //     display: block;
+        // }
+
         &.show {
             display: block;
         }
@@ -301,8 +310,11 @@ $jumbotron-bg: $bgSecondary;
     }
 
     .modal-body {
+        overflow-y: auto;
         max-height: 60vh;
-        overflow-y: scroll;
+    }
+    .modal.moveing .modal-body {// chrome render bug
+        overflow: hidden;
     }
 
     .modal-body,
@@ -328,6 +340,33 @@ $jumbotron-bg: $bgSecondary;
 
 /** REPLACE BOOTSTRAP * END */
 /** CUSTOM STYLES * START */
+
+.react-tabs__tab-list {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+.react-tabs__tab {
+    padding: em(3, $baseSize) em(10, $baseSize);
+    color: $gray-200;
+    background-color: $bgSecondary;
+    border-color: $bgSecondary;
+    border-top-left-radius: em(5, $baseSize);
+    border-top-right-radius: em(5, $baseSize);
+    user-select: none;
+}
+.react-tabs__tab--selected {
+    color: $white;
+    background-color: $gray-900;
+    border-color: $bgSecondary;
+
+    &:after {
+        display: none;
+    }
+}
+.react-tabs__tab-panel {
+    padding: em(2, $baseSize);
+    border: solid 1px $bgSecondary;
+}
 
 // scroll
 
@@ -513,7 +552,7 @@ img.img-flag {
 
 .marker {
     margin: 0.2em 0;
-    padding: 0.2em;
+    padding: em(2, $baseSize);
     border-radius: 0.3em;
     border: solid 1px rgba($gray-900, 0.5);
     background-color: rgba($bgSecondary, 0.3);
@@ -521,6 +560,9 @@ img.img-flag {
     opacity: 0.5;
     &.active {
         opacity: 1;
+    }
+    &.dragged {
+        opacity: 0.5;
     }
 
     .marker-header {
@@ -530,8 +572,13 @@ img.img-flag {
         align-items: center;
     }
 
+    .marker-header + .marker-body {
+        margin-top: 0.2em;
+    }
+
     .marker-body {
-        padding: 0.2em;
+        margin: 0 em(-3, $baseSize);
+        padding: 0.2em 0.2em 0.2em 0.5em;
         border-radius: 0.3em;
         border: solid 1px rgba($gray-900, 0.3);
         background-color: rgba($bgPrimary, 0.3);
