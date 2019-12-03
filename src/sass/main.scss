@@ -181,6 +181,10 @@ $jumbotron-bg: $bgSecondary;
 /** CUSTOM MIXINS * END */
 /** REPLACE MODAL * START */
 
+.modal {
+    z-index: 1;
+}
+
 .modal-container {
     @include absolute-stretch;
     overflow: hidden;
@@ -346,6 +350,7 @@ $jumbotron-bg: $bgSecondary;
     border-bottom: none;
 }
 .react-tabs__tab {
+    margin: em(1.5, $baseSize);
     padding: em(3, $baseSize) em(10, $baseSize);
     color: $gray-200;
     background-color: $bgSecondary;
@@ -396,6 +401,7 @@ $jumbotron-bg: $bgSecondary;
 // body
 
 html, body {
+    font-size: calc(10px + 0.6vw);
     height: 100%;
 }
 
@@ -519,6 +525,7 @@ body {
     .value-2 {color: #96eba4;}
     .value-3 {color: #e5eb96;}
     .value-4 {color: #eb9696;}
+    .value-5 {color: #e196eb;}
 }
 
 // searchModal
@@ -605,5 +612,45 @@ img.img-flag {
         & > * {
             margin: 0.2em;
         }
+    }
+}
+
+
+.topTribeTable {
+    display: grid;
+    grid-template: 'p name points offdef counts villagestop villagesworld';
+
+    & > * {
+        padding: 0.1em 0.4em;
+        border: solid 1px $bgSecondary;
+    }
+}
+.topCharacterTable {
+    display: grid;
+    grid-template: 'p name tribe points off def bash counts';
+
+    & > * {
+        padding: 0.1em 0.4em;
+        border: solid 1px $bgSecondary;
+    }
+}
+
+.privacy-settings {
+    min-width: em(400, $baseSize);
+}
+.modal-gdrp {
+    font-size: 1.4em;
+    background-color: rgba($bgPrimary, 0.9);
+
+    .modal-content {
+        border: solid 0.2em $bgSecondary;
+    }
+
+    .modal-body {
+        padding: 1em 1.3em;
+    }
+
+    .modal-footer {
+        border-top: solid 0.2em $bgSecondary;
     }
 }

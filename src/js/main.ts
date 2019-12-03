@@ -35,15 +35,13 @@ bindMainCanvasWorldStoreMarkers(context);
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import App from 'view/App';
-import ModalManager from 'libs/ModalManager';
 
 // view
 
 (function(){
     window.document.getElementById('loader').remove();
 
-    // view
-    const modalSystem: ModalManager = new ModalManager();
+    // view;
     const appView: React.ReactElement = React.createElement(App, { context });
 
     /******************************/

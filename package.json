@@ -2,7 +2,7 @@
   "name": "gl",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "tw2siteServer.js",
   "scripts": {
     "develop": "cross-env NODE_ENV=development node_modules/gulp/bin/gulp.js develop",
     "build": "cross-env NODE_ENV=production node_modules/gulp/bin/gulp.js"
