@@ -1,0 +1,6 @@
+{
+    "PORT": 8888,
+    "NODE_ENV": "development",
+    "DIR_STATIC": "./dest/static",
+    "DIR_DATA": "./../node_modules/tw2/map/build/data"
+}

@@ -2,7 +2,7 @@
   "name": "gl",
   "version": "1.0.0",
   "description": "",
-  "main": "tw2siteServer.js",
+  "main": "index.js",
   "scripts": {
     "develop": "cross-env NODE_ENV=development node_modules/gulp/bin/gulp.js develop",
     "build": "cross-env NODE_ENV=production node_modules/gulp/bin/gulp.js"
@@ -13,11 +13,11 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@fortawesome/fontawesome-free": "^5.8.2",
-    "@fortawesome/fontawesome-svg-core": "^1.2.19",
-    "@fortawesome/free-brands-svg-icons": "^5.9.0",
-    "@fortawesome/free-solid-svg-icons": "^5.9.0",
-    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "@types/debug": "^4.1.5",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.0",
@@ -51,6 +51,12 @@
     "cross-env": "^5.2.0",
     "express": "^4.17.1",
     "rc-color-picker": "^1.2.6",
-    "react-tabs": "^3.0.0"
+    "react-tabs": "^3.0.0",
+    "rollup": "^1.27.8",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "uglifyjs-webpack-plugin": "^2.2.0"
   }
 }

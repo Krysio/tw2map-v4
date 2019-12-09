@@ -2,6 +2,7 @@
 
 // Gulp
 
+const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
@@ -14,6 +15,24 @@ const chalk = require('chalk');
 
 /******************************/
 
+let fileConfig;
+let fileConfigRaw = fs.readFileSync(path.join(
+    __dirname,
+    'config.json'
+), {encoding: 'utf8'});
+try {
+    fileConfig = JSON.parse(fileConfigRaw);
+} catch (error) {}
+
+const config = {
+    ...{
+        NODE_ENV: 'production',
+        PORT: 1313,
+        DIR_DATA: null
+    },
+    ...(fileConfig || {})
+};
+
 // ENV
 
 const ENV = process.env.NODE_ENV || 'development';
@@ -23,7 +42,7 @@ if (VALID_ENV_LIST.indexOf(ENV) === -1) {
     throw new Error('Invalid ENV '+ ENV +' use '+ JSON.stringify(VALID_ENV_LIST));
 }
 
-const DIR_BUILD = '.';
+const DIR_BUILD = './dest';
 
 /******************************/
 
@@ -31,7 +50,9 @@ const DIR_BUILD = '.';
 
 function taskGl() {
     return gulp.src('src/glsl/*.glsl')
-        .pipe(gulp.dest('static/common/glsl'));
+        .pipe(gulp.dest(
+            path.join(DIR_BUILD, 'static/common/glsl')
+        ));
 }
 
 // SASS
@@ -41,7 +62,9 @@ function taskSass() {
         .pipe(sourcemaps.init())
         .pipe(sass.sync().on('error', sass.logError))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('static/'+ ENV +'/css'));
+        .pipe(gulp.dest(
+            path.join(DIR_BUILD, 'static', ENV, 'css')
+        ));
 }
 
 // JS
@@ -135,7 +158,9 @@ function taskJs(done) {
 
 function taskHtml() {
     return gulp.src('src/html/*.html')
-        .pipe(gulp.dest('static/'+ ENV));
+        .pipe(gulp.dest(
+            path.join(DIR_BUILD, 'static', ENV)
+        ));
 }
 
 // watch
@@ -164,23 +189,28 @@ let developTask = gulp.series(
 
         bs.init({
             server: {
-                baseDir: `./static/${ ENV }`,
+                baseDir: `${ DIR_BUILD }/static/${ ENV }`,
                 index: 'index.html',
                 middleware: [
                   historyFallback()
                 ]
             },
+            //@ts-ignore
             serveStatic: [
-                `./static/${ ENV }`,
-                `./static/common`
+                `${ DIR_BUILD }/static/${ ENV }`,
+                `${ DIR_BUILD }/static/common`,
+                {
+                    route: '/data',
+                    dir: config['DIR_DATA']
+                }
             ]
         });
 
-        gulp.watch(`static/${ ENV }/*`).on('change', bs.reload);
-        gulp.watch(`static/${ ENV }/js/*`).on('change', bs.reload);
-        gulp.watch(`static/${ ENV }/css/*`).on('change', bs.reload);
-        gulp.watch(`static/common/glsl/*`).on('change', bs.reload);
-        gulp.watch(`static/common/js/*`).on('change', bs.reload);
+        gulp.watch(`${ DIR_BUILD }/static/${ ENV }/*`).on('change', bs.reload);
+        gulp.watch(`${ DIR_BUILD }/static/${ ENV }/js/*`).on('change', bs.reload);
+        gulp.watch(`${ DIR_BUILD }/static/${ ENV }/css/*`).on('change', bs.reload);
+        gulp.watch(`${ DIR_BUILD }/static/common/glsl/*`).on('change', bs.reload);
+        gulp.watch(`${ DIR_BUILD }/static/common/js/*`).on('change', bs.reload);
     }
 );
 
