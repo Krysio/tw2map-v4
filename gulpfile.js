@@ -46,6 +46,15 @@ const DIR_BUILD = './dest';
 
 /******************************/
 
+// html
+
+function taskHtml() {
+    return gulp.src(`src/html/${ ENV }/*.html`)
+        .pipe(gulp.dest(
+            path.join(DIR_BUILD, 'static', ENV)
+        ));
+}
+
 // GLSL
 
 function taskGl() {
@@ -152,15 +161,6 @@ function taskJs(done) {
             done();
         }
     });
-}
-
-// html
-
-function taskHtml() {
-    return gulp.src('src/html/*.html')
-        .pipe(gulp.dest(
-            path.join(DIR_BUILD, 'static', ENV)
-        ));
 }
 
 // watch
