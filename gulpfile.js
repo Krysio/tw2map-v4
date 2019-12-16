@@ -141,7 +141,7 @@ function taskJs(done) {
     compiler.run((error, stats) => {
         if (error) {
             console.log(
-                chalk.yellow('[webpack][main]')
+                chalk['yellow']('[webpack][main]')
             );
             console.error(error.message);
         }
@@ -152,7 +152,7 @@ function taskJs(done) {
             for (let i = 0, l = list.length; i < l; i++) {
                 let error = list[ i ];
 
-                console.log(chalk.yellow('[webpack][compilation]'));
+                console.log(chalk['yellow']('[webpack][compilation]'));
                 console.error(error.message);
             }
         }
