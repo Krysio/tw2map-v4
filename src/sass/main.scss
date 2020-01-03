@@ -125,6 +125,11 @@ $jumbotron-bg: $bgSecondary;
 
 @import "import";
 
+.dropdown-divider {
+    margin: 0.25em 0 0;
+    border-color: inherit;
+}
+
 /** CUSTOM MIXINS * START */
 
 @mixin bgCarbon {
@@ -468,6 +473,10 @@ body {
 }
 
 /** CUSTOM STYLES * END */
+
+.dialog-modal .modal-content {
+    min-width: 20vw;
+}
 
 // Color picker restyle
 
