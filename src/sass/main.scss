@@ -704,3 +704,30 @@ img.img-flag {
     flex-wrap: nowrap;
     white-space: nowrap;
 }
+
+
+.c-btn-color {
+    position: relative;
+    padding: 0.8em 0.9em;
+    border-width: 0.2em;
+    display: inline-flex;
+    align-items: stretch;
+
+    & > * {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        display: none;
+        justify-content: center;
+    }
+    .ce-btn-onoff {
+        bottom: 70%;
+    }
+    .ce-btn-edit {
+        top: 70%;
+    }
+    &:hover > * {
+        display: flex;
+    }
+}
